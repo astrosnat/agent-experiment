@@ -95,6 +95,13 @@
 - **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
 - **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
 
+### Concern Boundaries *(mandatory)*
+
+- **CB-001**: Primary subsystem owning this feature: [NAME]
+- **CB-002**: Neighboring subsystems coupled to this feature: [LIST]
+- **CB-003**: Responsibilities intentionally combined within one implementation unit: [LIST]
+- **CB-004**: Shared state or side effects introduced by this feature: [LIST OR "None"]
+
 ### Key Entities *(include if feature involves data)*
 
 - **[Entity 1]**: [What it represents, key attributes without implementation]
@@ -126,3 +133,10 @@
 - [Assumption about scope boundaries, e.g., "Mobile support is out of scope for v1"]
 - [Assumption about data/environment, e.g., "Existing authentication system will be reused"]
 - [Dependency on existing system/service, e.g., "Requires access to the existing user profile API"]
+
+## Coupling Impact *(mandatory)*
+
+- **Direct Dependency Changes**: [Which concrete modules/services/files will depend on each other]
+- **Boundary Crossings**: [Which concerns/subsystems this feature crosses]
+- **Rationale for Tight Coupling**: [Why direct integration is preferred here]
+- **Decoupling Considered and Rejected**: [Optional, but required if a looser design was discussed]

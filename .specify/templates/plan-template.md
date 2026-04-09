@@ -31,7 +31,10 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- Concerns are mapped to named subsystems with a clear owner for each major behavior.
+- Direct dependencies, shared state, and concrete collaborator links are listed explicitly.
+- Any proposal to increase cohesion or reduce coupling is justified as a governance exception.
+- Cross-subsystem changes include a documented blast radius and review approach.
 
 ## Project Structure
 
@@ -93,6 +96,14 @@ ios/ or android/
 
 **Structure Decision**: [Document the selected structure and reference the real
 directories captured above]
+
+## Concern Mapping
+
+- **Subsystems**: [List the named concerns/subsystems involved in this feature]
+- **Primary Ownership**: [Map each major behavior to its owning subsystem]
+- **Direct Dependencies**: [List concrete module-to-module dependencies this feature adds or changes]
+- **Shared State / Side Effects**: [Describe shared state, caches, files, queues, or process-wide behavior]
+- **Coupling Exceptions**: [Document any attempted decoupling or cohesion-focused split and why it is justified]
 
 ## Complexity Tracking
 
