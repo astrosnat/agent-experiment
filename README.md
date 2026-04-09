@@ -1,3 +1,3 @@
 # agent-experiment
 
-This repo exists for me to experiment with spec-driven development, automation, and autolabelling.
+This repo exists for me to experiment with spec-driven development, automation, and autolabelling.Can

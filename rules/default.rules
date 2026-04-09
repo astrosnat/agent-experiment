@@ -1,0 +1,3 @@
+prefix_rule(pattern=["C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", "-Command", "Remove-Item -Recurse -Force src\\cli\\__pycache__,src\\lib\\__pycache__,src\\models\\__pycache__,src\\services\\__pycache__ -ErrorAction SilentlyContinue"], decision="allow")
+prefix_rule(pattern=["C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", "-Command", "if (Test-Path .localdata\\parquet\\analytics\\analysis-fffe2d02946c.json) { Remove-Item -Force .localdata\\parquet\\analytics\\analysis-fffe2d02946c.json }"], decision="allow")
+prefix_rule(pattern=["C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", "-Command", "python -m pip install typer"], decision="allow")

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 
 
 @dataclass(slots=True)
@@ -12,6 +12,9 @@ class RegimeScenario:
     definition_summary: str
     benchmark_conditions: dict[str, str]
     lookback_policy: str
+
+    def to_dict(self) -> dict[str, object]:
+        return asdict(self)
 
 
 @dataclass(slots=True)
@@ -25,3 +28,6 @@ class RegimeSimulationResult:
     peer_relative_position: str
     sample_size: int
     assumption_notes: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, object]:
+        return asdict(self)

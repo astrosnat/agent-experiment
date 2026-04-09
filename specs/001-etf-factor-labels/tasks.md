@@ -93,11 +93,11 @@
 
 ### Implementation for User Story 3
 
-- [ ] T025 [US3] Implement regime bucketing and simulation logic in `src/services/regime_service.py`
-- [ ] T026 [US3] Persist regime simulation results and comparison metadata in `src/lib/storage.py`
-- [ ] T027 [US3] Implement report composition in `src/services/report_service.py`
-- [ ] T028 [US3] Integrate the report command workflow in `src/cli/report.py`
-- [ ] T029 [US3] Update dependency mapping for regime and reporting flow in `specs/001-etf-factor-labels/plan.md`
+- [x] T025 [US3] Implement regime bucketing and simulation logic in `src/services/regime_service.py`
+- [x] T026 [US3] Persist regime simulation results and comparison metadata in `src/lib/storage.py`
+- [x] T027 [US3] Implement report composition in `src/services/report_service.py`
+- [x] T028 [US3] Integrate the report command workflow in `src/cli/report.py`
+- [x] T029 [US3] Update dependency mapping for regime and reporting flow in `specs/001-etf-factor-labels/plan.md`
 
 **Checkpoint**: All user stories should now be independently functional
 

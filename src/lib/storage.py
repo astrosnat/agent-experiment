@@ -11,6 +11,7 @@ from src.lib.settings import AppSettings
 from src.models.analytics_run import AnalyticsRun, RefreshRun, SignalLabelSet
 from src.models.instrument import ETFInstrument, PeerGroup
 from src.models.price_history import DailyPriceRecord
+from src.models.regime import RegimeScenario, RegimeSimulationResult
 
 
 class MetadataStore:
@@ -59,6 +60,64 @@ class MetadataStore:
 
     def analytics_run_path(self, analytics_run_id: str) -> Path:
         return self.settings.analytics_dir / f"{analytics_run_id}.json"
+
+    def list_analytics_run_ids(self) -> list[str]:
+        runs: list[tuple[str, str, str]] = []
+        for path in self.settings.analytics_dir.glob("*.json"):
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            analytics_run = payload.get("analytics_run", {})
+            run_id = str(analytics_run.get("analytics_run_id", path.stem))
+            completed_at = str(analytics_run.get("completed_at") or "")
+            started_at = str(analytics_run.get("started_at") or "")
+            runs.append((completed_at, started_at, run_id))
+        runs.sort()
+        return [run_id for _, _, run_id in runs]
+
+    def load_analytics_bundle(self, analytics_run_id: str) -> dict[str, object]:
+        path = self.analytics_run_path(analytics_run_id)
+        if not path.exists():
+            raise FileNotFoundError(f"unknown analytics run '{analytics_run_id}'")
+        return json.loads(path.read_text(encoding="utf-8"))
+
+    def latest_analytics_run_id(self) -> str | None:
+        run_ids = self.list_analytics_run_ids()
+        if not run_ids:
+            return None
+        return run_ids[-1]
+
+    def load_signal_label_sets(self, analytics_run_id: str) -> list[SignalLabelSet]:
+        payload = self.load_analytics_bundle(analytics_run_id)
+        label_sets = payload.get("signal_label_sets", [])
+        return [SignalLabelSet(**row) for row in label_sets]
+
+    def persist_regime_results(
+        self,
+        analytics_run_id: str,
+        scenarios: Iterable[RegimeScenario],
+        results: Iterable[RegimeSimulationResult],
+        comparison_metadata: dict[str, object] | None = None,
+    ) -> None:
+        payload = self.load_analytics_bundle(analytics_run_id)
+        payload["regime_scenarios"] = [scenario.to_dict() for scenario in scenarios]
+        payload["regime_simulation_results"] = [result.to_dict() for result in results]
+        if comparison_metadata is not None:
+            payload["comparison_metadata"] = comparison_metadata
+        self.analytics_run_path(analytics_run_id).write_text(
+            json.dumps(payload, indent=2),
+            encoding="utf-8",
+        )
+
+    def persist_comparison_metadata(
+        self,
+        analytics_run_id: str,
+        comparison_metadata: dict[str, object],
+    ) -> None:
+        payload = self.load_analytics_bundle(analytics_run_id)
+        payload["comparison_metadata"] = comparison_metadata
+        self.analytics_run_path(analytics_run_id).write_text(
+            json.dumps(payload, indent=2),
+            encoding="utf-8",
+        )
 
     def load_price_history(self, ticker: str) -> list[DailyPriceRecord]:
         path = self.price_history_path(ticker)
@@ -190,6 +249,9 @@ class MetadataStore:
         payload = {
             "analytics_run": analytics_run.to_dict(),
             "signal_label_sets": [label_set.to_dict() for label_set in signal_label_sets],
+            "regime_scenarios": [],
+            "regime_simulation_results": [],
+            "comparison_metadata": {},
         }
         self.analytics_run_path(analytics_run.analytics_run_id).write_text(
             json.dumps(payload, indent=2),

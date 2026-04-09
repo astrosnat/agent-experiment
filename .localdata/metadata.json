@@ -15,6 +15,22 @@
         "partial": 6,
         "unavailable": 0
       }
+    },
+    {
+      "analytics_run_id": "analysis-5a3296a35761",
+      "refresh_run_id": null,
+      "started_at": "2026-04-09T07:36:56.037299+00:00",
+      "completed_at": "2026-04-09T07:36:56.039869+00:00",
+      "window_config": "compare-check",
+      "regime_config": "historical-buckets-v1",
+      "peer_definition_version": "default-v1",
+      "status": "partial",
+      "coverage_summary": {
+        "requested": 6,
+        "completed": 0,
+        "partial": 6,
+        "unavailable": 0
+      }
     }
   ]
 }

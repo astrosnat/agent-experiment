@@ -142,6 +142,11 @@ and storage helpers instead of introducing extra abstraction layers.
 - Shared risk metrics, label helpers, and peer helpers are implemented as direct
   library dependencies for downstream services rather than hidden behind extra
   adapter layers.
+- User Story 3 keeps reporting directly coupled to persisted analytics bundles:
+  report execution loads the selected analytics snapshot, generates empirical
+  regime buckets from stored histories when needed, persists regime and
+  comparison metadata back into the same run artifact, and renders user-facing
+  summaries without a detached reporting cache.
 
 ## Complexity Tracking
 

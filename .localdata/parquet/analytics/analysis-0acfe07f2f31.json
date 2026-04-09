@@ -200,5 +200,81 @@
         "Carry-like output is a return-based proxy rather than literal carry."
       ]
     }
+  ],
+  "regime_scenarios": [
+    {
+      "regime_id": "risk_on",
+      "name": "Risk On",
+      "definition_summary": "Upper tercile of benchmark return observations.",
+      "benchmark_conditions": {
+        "return_bucket": "top_tercile",
+        "volatility_filter": "not_applied"
+      },
+      "lookback_policy": "Full stored history, benchmarked on peer-average daily returns."
+    },
+    {
+      "regime_id": "neutral",
+      "name": "Neutral",
+      "definition_summary": "Middle tercile of benchmark return observations.",
+      "benchmark_conditions": {
+        "return_bucket": "middle_tercile",
+        "volatility_filter": "not_applied"
+      },
+      "lookback_policy": "Full stored history, benchmarked on peer-average daily returns."
+    },
+    {
+      "regime_id": "stress",
+      "name": "Stress",
+      "definition_summary": "Lower tercile of benchmark return observations.",
+      "benchmark_conditions": {
+        "return_bucket": "bottom_tercile",
+        "volatility_filter": "not_applied"
+      },
+      "lookback_policy": "Full stored history, benchmarked on peer-average daily returns."
+    }
+  ],
+  "regime_simulation_results": [
+    {
+      "analytics_run_id": "analysis-0acfe07f2f31",
+      "ticker": "SWDA",
+      "regime_id": "risk_on",
+      "expected_return_range": "unavailable",
+      "downside_range": "unavailable",
+      "dispersion_range": "unavailable",
+      "peer_relative_position": "insufficient_history",
+      "sample_size": 0,
+      "assumption_notes": [
+        "No stored return history is available for regime simulation.",
+        "Upper tercile of benchmark return observations."
+      ]
+    },
+    {
+      "analytics_run_id": "analysis-0acfe07f2f31",
+      "ticker": "SWDA",
+      "regime_id": "neutral",
+      "expected_return_range": "unavailable",
+      "downside_range": "unavailable",
+      "dispersion_range": "unavailable",
+      "peer_relative_position": "insufficient_history",
+      "sample_size": 0,
+      "assumption_notes": [
+        "No stored return history is available for regime simulation.",
+        "Middle tercile of benchmark return observations."
+      ]
+    },
+    {
+      "analytics_run_id": "analysis-0acfe07f2f31",
+      "ticker": "SWDA",
+      "regime_id": "stress",
+      "expected_return_range": "unavailable",
+      "downside_range": "unavailable",
+      "dispersion_range": "unavailable",
+      "peer_relative_position": "insufficient_history",
+      "sample_size": 0,
+      "assumption_notes": [
+        "No stored return history is available for regime simulation.",
+        "Lower tercile of benchmark return observations."
+      ]
+    }
   ]
 }
