@@ -8,14 +8,17 @@
 ## Summary
 
 Build a single-project analytics CLI that refreshes public daily ETF prices for a
-watchlist, computes tightly integrated factor-style labels and diagnostics, and
-produces peer-aware regime summaries backed by persisted run history.
+watchlist, computes tightly integrated factor-style labels and diagnostics,
+produces peer-aware regime summaries backed by persisted run history, and
+evolves the original heuristic labeling path into a probabilistic multilabel
+pipeline with weak supervision, calibrated inference, and sidecar latent-family
+discovery.
 
 ## Technical Context
 
 **Language/Version**: Python 3.12  
-**Primary Dependencies**: Typer, httpx, pandas, numpy, scipy, pydantic, duckdb, pyarrow  
-**Storage**: DuckDB for metadata and run history, Parquet files for daily price series and derived analytics snapshots  
+**Primary Dependencies**: Typer, httpx, pandas, numpy, scipy, pydantic, duckdb, pyarrow, scikit-learn  
+**Storage**: DuckDB for metadata and run history, Parquet files for daily price series, derived analytics snapshots, and persisted multilabel feature and inference artifacts  
 **Testing**: pytest  
 **Target Platform**: Local CLI on Windows, macOS, and Linux  
 **Project Type**: Single-project CLI analytics pipeline  
@@ -35,12 +38,14 @@ produces peer-aware regime summaries backed by persisted run history.
 **Gate Status**: PASS
 
 **Why it passes pre-design**:
-- The plan names five subsystems: watchlist management, market data ingestion,
-  analytics computation, regime simulation, and reporting.
+- The plan names seven subsystems: watchlist management, market data ingestion,
+  analytics computation, weak supervision, multilabel inference, regime
+  simulation, and reporting.
 - The design intentionally keeps analytics computation and label assignment in
   the same execution flow, matching the repository constitution.
 - Shared state is explicit: Parquet history files, DuckDB metadata, analytics
-  snapshots, peer definitions, and run audit records.
+  snapshots, peer definitions, weak-label artifacts, latent-family outputs, and
+  run audit records.
 - Cross-subsystem blast radius is narrow and documented in the concern mapping
   below.
 
@@ -77,23 +82,34 @@ src/
 |   |-- watchlist_service.py
 |   |-- market_data_service.py
 |   |-- analytics_service.py
+|   |-- weak_supervision_service.py
+|   |-- multilabel_model_service.py
+|   |-- clustering_service.py
 |   |-- regime_service.py
 |   `-- report_service.py
 `-- lib/
+    |-- factors.py
+    |-- features.py
     |-- storage.py
     |-- labeling.py
     |-- metrics.py
-    `-- peers.py
+    |-- peers.py
+    `-- evaluation.py
 
 tests/
 |-- contract/
 |   `-- test_cli_contract.py
 |-- integration/
 |   |-- test_refresh_pipeline.py
-|   `-- test_analysis_pipeline.py
+|   |-- test_analysis_pipeline.py
+|   `-- test_labeling_v2_pipeline.py
 `-- unit/
     |-- test_metrics.py
     |-- test_labels.py
+    |-- test_features.py
+    |-- test_labeling_v2.py
+    |-- test_factors.py
+    |-- test_weak_supervision.py
     `-- test_regimes.py
 ```
 
@@ -104,23 +120,27 @@ and storage helpers instead of introducing extra abstraction layers.
 
 ## Concern Mapping
 
-- **Subsystems**: Watchlist management, market data ingestion, analytics computation, regime simulation, reporting
+- **Subsystems**: Watchlist management, market data ingestion, analytics computation, weak supervision, multilabel inference, regime simulation, reporting
 - **Primary Ownership**:
   Watchlist management owns tracked ETF definitions and peer-group membership.
   Market data ingestion owns source refresh, coverage checks, and persisted daily price history.
-  Analytics computation owns rolling metrics, labels, and factor-style diagnostics.
+  Analytics computation owns feature assembly, factor exposure estimation, and analytics run orchestration.
+  Weak supervision owns heuristic voting functions, abstention behavior, and probabilistic weak-target generation.
+  Multilabel inference owns calibrated multilabel training, thresholding, and latent-family sidecar outputs.
   Regime simulation owns historical state bucketing and scenario return summaries.
   Reporting owns user-facing consolidated outputs and run-to-run comparisons.
 - **Direct Dependencies**:
   Watchlist management depends on storage for persisted ETF metadata.
   Market data ingestion depends on watchlist management and storage.
-  Analytics computation depends directly on market data ingestion outputs, peer definitions, and storage.
+  Analytics computation depends directly on market data ingestion outputs, peer definitions, factor inputs, and storage.
+  Weak supervision depends directly on analytics feature outputs and label ontology rules.
+  Multilabel inference depends directly on analytics features, weak-label targets, and calibration metadata.
   Regime simulation depends directly on analytics computation outputs and selected benchmark histories.
-  Reporting depends directly on analytics computation, regime simulation, and run history storage.
+  Reporting depends directly on analytics computation, multilabel outputs, regime simulation, and run history storage.
 - **Shared State / Side Effects**:
-  Persisted watchlist definitions, peer memberships, raw and normalized daily price series, analytics snapshots, regime summary outputs, refresh audit logs, and run comparison metadata.
+  Persisted watchlist definitions, peer memberships, raw and normalized daily price series, analytics snapshots, probabilistic label records, weak-label metadata, calibration metadata, latent-family soft memberships, regime summary outputs, refresh audit logs, and run comparison metadata.
 - **Coupling Exceptions**:
-  Metric calculation and label assignment remain in the same subsystem rather than being split into isolated engines. This is an intentional low-cohesion choice so every derived label is computed against the exact same aligned return series and windowing rules.
+  Feature generation, weak supervision, and multilabel inference stay in one orchestrated analytics flow rather than being split into detached batch stages. This is an intentional low-cohesion choice so every persisted probability, evidence trail, and threshold decision is tied to the exact same aligned windows, peer normalization, and model version.
 
 ## Implementation Notes
 
@@ -142,6 +162,19 @@ and storage helpers instead of introducing extra abstraction layers.
 - Shared risk metrics, label helpers, and peer helpers are implemented as direct
   library dependencies for downstream services rather than hidden behind extra
   adapter layers.
+- User Story 4 replaces the original string-label path with a richer analytics
+  pipeline: multi-horizon peer-normalized features are assembled from stored
+  histories and factor proxies, weak labeling functions vote positive, negative,
+  or abstain per semantic label, and calibrated multilabel models persist
+  probabilities, evidence, confidence, version metadata, and active-threshold
+  decisions.
+- The new labeling ontology separates exclusive descriptor namespaces such as
+  `descriptor.asset_class` and `descriptor.region` from non-exclusive
+  probability-bearing semantic labels such as `exposure.trend`,
+  `exposure.carry`, `behavior.mean_reversion`, and `risk.high_volatility`.
+- Unsupervised clustering remains a sidecar output only: latent family soft
+  memberships are persisted for discovery and search, but cluster IDs do not
+  replace the explicit semantic label taxonomy.
 - User Story 3 keeps reporting directly coupled to persisted analytics bundles:
   report execution loads the selected analytics snapshot, generates empirical
   regime buckets from stored histories when needed, persists regime and
@@ -153,6 +186,7 @@ and storage helpers instead of introducing extra abstraction layers.
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
 | Shared analytics and labeling pipeline | Labels and diagnostics must be generated from one aligned data frame and one run context | Splitting each metric family into separate passes would increase reconciliation work and make audit output harder to trust |
+| Weak supervision and calibrated multilabel inference in the same execution path | Probabilistic labels need traceable evidence, calibration metadata, and threshold decisions tied to one feature snapshot | Treating heuristic votes, model inference, and calibration as separate offline jobs would make label provenance hard to audit and reruns hard to reproduce |
 | Direct reporting dependency on analytics snapshots | Reports must expose exact run assumptions and unavailable markers without translation lag | A detached reporting cache would drift from the analysis run and hide missing-data reasons |
 
 ## Phase 0: Research
@@ -173,7 +207,8 @@ and storage helpers instead of introducing extra abstraction layers.
 - Named subsystem ownership is explicit in the concern mapping and data model.
 - Direct dependencies and shared state are documented in the plan, data model,
   and CLI contract.
-- The only cohesion-improving alternative considered was a more decomposed
-  analytics engine; it remains rejected and justified in Complexity Tracking.
+- The main cohesion-improving alternatives considered were a more decomposed
+  analytics engine and detached offline labeling jobs; both remain rejected and
+  justified in Complexity Tracking.
 - Cross-subsystem behavior remains reviewable because refresh, analysis, regime,
   and reporting operations produce persisted audit records.

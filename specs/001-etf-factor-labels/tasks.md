@@ -115,6 +115,31 @@
 
 ---
 
+## Phase 7: User Story 4 - Replace heuristic labels with probabilistic multilabel labeling (Priority: P4)
+
+**Goal**: Replace string-based heuristic labels with a namespaced probabilistic multilabel system backed by multi-horizon features, weak supervision, calibrated models, and sidecar latent-family clustering
+
+**Independent Test**: Run `python -m src.cli.main analyze --watchlist default --run-label labels-v2` and verify that each ETF receives persisted `LabelRecord` outputs with probabilities, evidence, confidence, window, source, version, and active flags, plus latent family soft memberships.
+
+### Implementation for User Story 4
+
+- [ ] T035 [US4] Add the v2 label ontology models, `LabelRecord` schema, namespace and exclusivity rules, and latent-family output models in `src/models/analytics_run.py` and `src/models/instrument.py`
+- [ ] T036 [US4] Extend analytics persistence for probabilistic label records, multi-window feature payloads, weak-label metadata, model outputs, calibration metadata, and latent family probabilities in `src/lib/storage.py`
+- [ ] T037 [US4] Implement multi-horizon feature generation for standardized net returns, benchmark and factor returns, turnover, leverage, holding period, metadata, and peer-group normalization in `src/lib/metrics.py` and `src/lib/features.py`
+- [ ] T038 [US4] Implement measured factor and style exposure estimation using regressions or returns-based style analysis for equity beta, rates duration, curve, carry, credit, FX, commodity, and trend or momentum in `src/lib/factors.py`
+- [ ] T039 [US4] Replace string label helpers with probabilistic labeling functions that emit `{score, probability, abstain, evidence, window}` per semantic label in `src/lib/labeling.py`
+- [ ] T040 [US4] Implement weak-label aggregation for correlated labeling functions and probabilistic targets in `src/services/weak_supervision_service.py`
+- [ ] T041 [US4] Implement multilabel training and inference with one-vs-rest baseline, classifier-chain support, and probability calibration in `src/services/multilabel_model_service.py`
+- [ ] T042 [US4] Implement latent family sidecar clustering with soft memberships and persisted `latent_family_probs` outputs in `src/services/clustering_service.py`
+- [ ] T043 [US4] Refactor analytics orchestration to build v2 features, generate weak labels, run calibrated multilabel inference, persist `LabelRecord` results, and store latent-family outputs in `src/services/analytics_service.py`
+- [ ] T044 [US4] Update analysis CLI output to summarize probabilistic labels, active thresholds, evidence, and model and version provenance in `src/cli/analyze.py`
+- [ ] T045 [US4] Add evaluation and stability metrics for per-label precision and recall, average precision, sample-level Jaccard, LRAP, calibration quality, and rolling-window label stability in `src/lib/evaluation.py` and `src/services/multilabel_model_service.py`
+- [ ] T046 [US4] Add unit coverage for feature engineering, factor exposure estimation, labeling functions, weak-label aggregation, and calibration behavior in `tests/unit/test_features.py`, `tests/unit/test_labeling_v2.py`, `tests/unit/test_factors.py`, and `tests/unit/test_weak_supervision.py`
+- [ ] T047 [US4] Add integration coverage for the v2 analytics pipeline and persisted multilabel artifacts in `tests/integration/test_analysis_pipeline.py` and `tests/integration/test_labeling_v2_pipeline.py`
+- [ ] T048 [US4] Update dependency mapping and operator documentation for the v2 multilabel pipeline in `specs/001-etf-factor-labels/plan.md` and `specs/001-etf-factor-labels/quickstart.md`
+
+---
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
@@ -125,12 +150,14 @@
 - **User Story 2 (Phase 4)**: Depends on User Story 1 data refresh pipeline because analytics require stored histories
 - **User Story 3 (Phase 5)**: Depends on User Story 2 analytics outputs because regime reporting uses saved analytics runs
 - **Polish (Phase 6)**: Depends on all desired user stories being complete
+- **User Story 4 (Phase 7)**: Depends on User Story 2 analytics outputs and supersedes the current heuristic labeling path with a new multilabel pipeline
 
 ### User Story Dependencies
 
 - **User Story 1 (P1)**: First deliverable and suggested MVP
 - **User Story 2 (P2)**: Depends on persisted histories produced by US1
 - **User Story 3 (P3)**: Depends on analytics snapshots produced by US2
+- **User Story 4 (P4)**: Depends on US1 for stored histories and extends US2 by replacing heuristic label generation with probabilistic multilabel analytics
 
 ### Within Each User Story
 
@@ -143,6 +170,7 @@
 - T003 and T004 can run in parallel after T001
 - T007, T009, and T010 can run in parallel after T006
 - In Phase 6, T030, T031, and T032 can run in parallel once implementation stabilizes
+- In Phase 7, T037 and T038 can run in parallel after T035 and T036, and T046 and T047 can run in parallel once the v2 pipeline stabilizes
 
 ---
 
@@ -171,10 +199,11 @@ Task: "T022 [US2] Add peer correlation summaries and peer selection outputs in s
 2. Add analytics labels and diagnostics on top of stored histories
 3. Add regime simulation and reporting once run history exists
 4. Harden with tests and quickstart validation
+5. Replace heuristic labels with probabilistic multilabel analytics and sidecar latent family discovery
 
 ## Notes
 
-- Total tasks: 34
-- User story task counts: US1 = 5, US2 = 6, US3 = 5
+- Total tasks: 48
+- User story task counts: US1 = 5, US2 = 6, US3 = 5, US4 = 14
 - Suggested MVP scope: Through T018 (User Story 1 complete)
 - All tasks follow the required checklist format with IDs, labels where required, and exact file paths
