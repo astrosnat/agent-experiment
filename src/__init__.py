@@ -1,0 +1,1 @@
+"""ETF factor labels package."""

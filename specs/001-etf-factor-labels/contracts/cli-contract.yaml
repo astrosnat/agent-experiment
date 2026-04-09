@@ -1,0 +1,102 @@
+version: 1
+application: etf-factor-labels
+interface: cli
+
+commands:
+  - name: refresh
+    description: Refresh public daily ETF price histories for a watchlist or explicit ticker set.
+    inputs:
+      watchlist:
+        type: string
+        required: false
+        description: Named watchlist to refresh. Defaults to the configured default watchlist.
+      tickers:
+        type: array
+        required: false
+        description: Explicit ETF tickers to refresh instead of a named watchlist.
+      as_of_date:
+        type: string
+        required: false
+        description: Optional upper-bound trade date for deterministic reruns.
+    success_output:
+      refresh_run_id: string
+      refreshed_tickers:
+        type: array
+      incomplete_tickers:
+        type: array
+      coverage_summary:
+        type: object
+      warnings:
+        type: array
+    failure_conditions:
+      - No tickers resolved from watchlist or explicit input
+      - Public source unavailable for all requested instruments
+      - Persisted history cannot be written
+
+  - name: analyze
+    description: Compute labels, diagnostics, peer summaries, and regime outputs from stored ETF histories.
+    inputs:
+      watchlist:
+        type: string
+        required: false
+      tickers:
+        type: array
+        required: false
+      run_label:
+        type: string
+        required: false
+      refresh_run_id:
+        type: string
+        required: false
+        description: Optional source refresh to analyze. Defaults to the latest compatible refresh.
+    success_output:
+      analytics_run_id: string
+      completed_tickers:
+        type: array
+      partial_tickers:
+        type: array
+      unavailable_metrics:
+        type: object
+      assumption_summary:
+        type: array
+    failure_conditions:
+      - No stored price history available for requested instruments
+      - Required benchmark proxies for factor or regime labels are unavailable
+      - Analytics snapshot cannot be persisted
+
+  - name: report
+    description: Render user-facing summaries for one ETF or a full watchlist from a saved analytics run.
+    inputs:
+      ticker:
+        type: string
+        required: false
+      watchlist:
+        type: string
+        required: false
+      analytics_run_id:
+        type: string
+        required: false
+      latest:
+        type: boolean
+        required: false
+      compare_previous:
+        type: boolean
+        required: false
+    success_output:
+      subject:
+        type: string
+      labels:
+        type: object
+      diagnostics:
+        type: object
+      peer_context:
+        type: object
+      regime_summaries:
+        type: array
+      comparison:
+        type: object
+        required: false
+    failure_conditions:
+      - Requested ETF or watchlist is unknown
+      - No matching analytics run exists
+      - Comparison requested but no prior run is available

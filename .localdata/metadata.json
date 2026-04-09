@@ -1,0 +1,20 @@
+{
+  "analytics_runs": [
+    {
+      "analytics_run_id": "analysis-0acfe07f2f31",
+      "refresh_run_id": null,
+      "started_at": "2026-04-09T07:03:46.116008+00:00",
+      "completed_at": "2026-04-09T07:03:46.116495+00:00",
+      "window_config": "smoke",
+      "regime_config": "historical-buckets-v1",
+      "peer_definition_version": "default-v1",
+      "status": "partial",
+      "coverage_summary": {
+        "requested": 6,
+        "completed": 0,
+        "partial": 6,
+        "unavailable": 0
+      }
+    }
+  ]
+}

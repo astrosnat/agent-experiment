@@ -1,0 +1,14 @@
+[
+  {
+    "peer_group_id": "global-multi-asset-liquid",
+    "name": "Global Liquid ETF Peers",
+    "description": "Liquid public ETFs used for the default comparative analytics universe.",
+    "membership_rule": "manual",
+    "benchmark_tickers": [
+      "ACWI",
+      "AGGG",
+      "GLD",
+      "DBC"
+    ]
+  }
+]

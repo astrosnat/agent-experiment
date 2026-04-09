@@ -1,0 +1,204 @@
+{
+  "analytics_run": {
+    "analytics_run_id": "analysis-0acfe07f2f31",
+    "refresh_run_id": null,
+    "started_at": "2026-04-09T07:03:46.116008+00:00",
+    "completed_at": "2026-04-09T07:03:46.116495+00:00",
+    "window_config": "smoke",
+    "regime_config": "historical-buckets-v1",
+    "peer_definition_version": "default-v1",
+    "status": "partial",
+    "coverage_summary": {
+      "requested": 6,
+      "completed": 0,
+      "partial": 6,
+      "unavailable": 0
+    }
+  },
+  "signal_label_sets": [
+    {
+      "analytics_run_id": "analysis-0acfe07f2f31",
+      "ticker": "SWDA",
+      "trend_label": "sideways",
+      "mean_reversion_label": "insufficient_history",
+      "volatility_label": "low_volatility",
+      "carry_proxy_label": "insufficient_history",
+      "factor_exposure_labels": [
+        "asset_class:equity",
+        "equity_beta:global"
+      ],
+      "rolling_sharpe_value": null,
+      "skew_value": null,
+      "max_drawdown_value": null,
+      "turnover_proxy_value": null,
+      "peer_correlation_summary": {
+        "ticker": "SWDA",
+        "peer_count": 0,
+        "peer_tickers": [],
+        "average_correlation": 0.0,
+        "correlations": {}
+      },
+      "availability_flags": [
+        "insufficient_history:0<30"
+      ],
+      "assumption_notes": [
+        "Labels are generated from adjusted daily prices.",
+        "Carry-like output is a return-based proxy rather than literal carry."
+      ]
+    },
+    {
+      "analytics_run_id": "analysis-0acfe07f2f31",
+      "ticker": "VUSA",
+      "trend_label": "sideways",
+      "mean_reversion_label": "insufficient_history",
+      "volatility_label": "low_volatility",
+      "carry_proxy_label": "insufficient_history",
+      "factor_exposure_labels": [
+        "asset_class:equity",
+        "equity_beta:us"
+      ],
+      "rolling_sharpe_value": null,
+      "skew_value": null,
+      "max_drawdown_value": null,
+      "turnover_proxy_value": null,
+      "peer_correlation_summary": {
+        "ticker": "VUSA",
+        "peer_count": 0,
+        "peer_tickers": [],
+        "average_correlation": 0.0,
+        "correlations": {}
+      },
+      "availability_flags": [
+        "insufficient_history:0<30"
+      ],
+      "assumption_notes": [
+        "Labels are generated from adjusted daily prices.",
+        "Carry-like output is a return-based proxy rather than literal carry."
+      ]
+    },
+    {
+      "analytics_run_id": "analysis-0acfe07f2f31",
+      "ticker": "REGB",
+      "trend_label": "sideways",
+      "mean_reversion_label": "insufficient_history",
+      "volatility_label": "low_volatility",
+      "carry_proxy_label": "insufficient_history",
+      "factor_exposure_labels": [
+        "asset_class:bond",
+        "rate_sensitivity:duration",
+        "equity_beta:us"
+      ],
+      "rolling_sharpe_value": null,
+      "skew_value": null,
+      "max_drawdown_value": null,
+      "turnover_proxy_value": null,
+      "peer_correlation_summary": {
+        "ticker": "REGB",
+        "peer_count": 0,
+        "peer_tickers": [],
+        "average_correlation": 0.0,
+        "correlations": {}
+      },
+      "availability_flags": [
+        "insufficient_history:0<30"
+      ],
+      "assumption_notes": [
+        "Labels are generated from adjusted daily prices.",
+        "Carry-like output is a return-based proxy rather than literal carry."
+      ]
+    },
+    {
+      "analytics_run_id": "analysis-0acfe07f2f31",
+      "ticker": "SGLN",
+      "trend_label": "sideways",
+      "mean_reversion_label": "insufficient_history",
+      "volatility_label": "low_volatility",
+      "carry_proxy_label": "insufficient_history",
+      "factor_exposure_labels": [
+        "asset_class:commodity",
+        "real_asset:commodity",
+        "equity_beta:global"
+      ],
+      "rolling_sharpe_value": null,
+      "skew_value": null,
+      "max_drawdown_value": null,
+      "turnover_proxy_value": null,
+      "peer_correlation_summary": {
+        "ticker": "SGLN",
+        "peer_count": 0,
+        "peer_tickers": [],
+        "average_correlation": 0.0,
+        "correlations": {}
+      },
+      "availability_flags": [
+        "insufficient_history:0<30"
+      ],
+      "assumption_notes": [
+        "Labels are generated from adjusted daily prices.",
+        "Carry-like output is a return-based proxy rather than literal carry."
+      ]
+    },
+    {
+      "analytics_run_id": "analysis-0acfe07f2f31",
+      "ticker": "URNG",
+      "trend_label": "sideways",
+      "mean_reversion_label": "insufficient_history",
+      "volatility_label": "low_volatility",
+      "carry_proxy_label": "insufficient_history",
+      "factor_exposure_labels": [
+        "asset_class:thematic",
+        "equity_style:thematic",
+        "equity_beta:global"
+      ],
+      "rolling_sharpe_value": null,
+      "skew_value": null,
+      "max_drawdown_value": null,
+      "turnover_proxy_value": null,
+      "peer_correlation_summary": {
+        "ticker": "URNG",
+        "peer_count": 0,
+        "peer_tickers": [],
+        "average_correlation": 0.0,
+        "correlations": {}
+      },
+      "availability_flags": [
+        "insufficient_history:0<30"
+      ],
+      "assumption_notes": [
+        "Labels are generated from adjusted daily prices.",
+        "Carry-like output is a return-based proxy rather than literal carry."
+      ]
+    },
+    {
+      "analytics_run_id": "analysis-0acfe07f2f31",
+      "ticker": "NATP",
+      "trend_label": "sideways",
+      "mean_reversion_label": "insufficient_history",
+      "volatility_label": "low_volatility",
+      "carry_proxy_label": "insufficient_history",
+      "factor_exposure_labels": [
+        "asset_class:thematic",
+        "equity_style:thematic",
+        "equity_beta:global"
+      ],
+      "rolling_sharpe_value": null,
+      "skew_value": null,
+      "max_drawdown_value": null,
+      "turnover_proxy_value": null,
+      "peer_correlation_summary": {
+        "ticker": "NATP",
+        "peer_count": 0,
+        "peer_tickers": [],
+        "average_correlation": 0.0,
+        "correlations": {}
+      },
+      "availability_flags": [
+        "insufficient_history:0<30"
+      ],
+      "assumption_notes": [
+        "Labels are generated from adjusted daily prices.",
+        "Carry-like output is a return-based proxy rather than literal carry."
+      ]
+    }
+  ]
+}

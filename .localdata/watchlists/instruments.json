@@ -1,0 +1,80 @@
+[
+  {
+    "ticker": "SWDA",
+    "name": "iShares Core MSCI World UCITS ETF",
+    "asset_class": "equity",
+    "region_focus": "global developed markets",
+    "currency": "USD",
+    "peer_group_id": "global-multi-asset-liquid",
+    "status": "active",
+    "inception_date": null,
+    "last_refresh_date": null,
+    "coverage_start_date": null,
+    "coverage_end_date": null
+  },
+  {
+    "ticker": "VUSA",
+    "name": "Vanguard S&P 500 UCITS ETF",
+    "asset_class": "equity",
+    "region_focus": "United States",
+    "currency": "USD",
+    "peer_group_id": "global-multi-asset-liquid",
+    "status": "active",
+    "inception_date": null,
+    "last_refresh_date": null,
+    "coverage_start_date": null,
+    "coverage_end_date": null
+  },
+  {
+    "ticker": "REGB",
+    "name": "iShares ESG Aware US Aggregate Bond ETF",
+    "asset_class": "bond",
+    "region_focus": "United States",
+    "currency": "USD",
+    "peer_group_id": "global-multi-asset-liquid",
+    "status": "active",
+    "inception_date": null,
+    "last_refresh_date": null,
+    "coverage_start_date": null,
+    "coverage_end_date": null
+  },
+  {
+    "ticker": "SGLN",
+    "name": "iShares Physical Gold ETC",
+    "asset_class": "commodity",
+    "region_focus": "global",
+    "currency": "USD",
+    "peer_group_id": "global-multi-asset-liquid",
+    "status": "active",
+    "inception_date": null,
+    "last_refresh_date": null,
+    "coverage_start_date": null,
+    "coverage_end_date": null
+  },
+  {
+    "ticker": "URNG",
+    "name": "Global X Uranium UCITS ETF",
+    "asset_class": "thematic",
+    "region_focus": "global",
+    "currency": "USD",
+    "peer_group_id": "global-multi-asset-liquid",
+    "status": "active",
+    "inception_date": null,
+    "last_refresh_date": null,
+    "coverage_start_date": null,
+    "coverage_end_date": null
+  },
+  {
+    "ticker": "NATP",
+    "name": "HANetf Sprott Uranium Miners UCITS ETF",
+    "asset_class": "thematic",
+    "region_focus": "global",
+    "currency": "USD",
+    "peer_group_id": "global-multi-asset-liquid",
+    "status": "active",
+    "inception_date": null,
+    "last_refresh_date": null,
+    "coverage_start_date": null,
+    "coverage_end_date": null
+  }
+]
