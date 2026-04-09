@@ -93,39 +93,142 @@ relative labels.
 - `window_config`: Named calculation-window profile
 - `regime_config`: Regime classification profile used
 - `peer_definition_version`: Peer metadata revision
+- `label_version`: Active label ontology and model bundle version
+- `feature_version`: Feature-engineering pipeline version
+- `model_version`: Multilabel model and calibration bundle version
 - `status`: Completed, partial, or failed
 - `coverage_summary`: Count of full, partial, and unavailable analytics
 
 **Relationships**:
 - One analytics run references one refresh run
-- One analytics run has many signal label sets
+- One analytics run has many analytics feature snapshots
+- One analytics run has many weak label votes
+- One analytics run has many probabilistic label records
+- One analytics run has many latent family memberships
 - One analytics run has many regime scenario summaries
 
-## Signal Label Set
+## Analytics Feature Snapshot
 
-**Purpose**: Stores all labels and core diagnostics for one ETF in one
-analytics run.
+**Purpose**: Stores the engineered feature payload for one ETF in one
+analytics run so weak supervision, calibrated inference, and stability checks
+can be reproduced exactly.
 
 **Fields**:
 - `analytics_run_id`
 - `ticker`
-- `trend_label`
-- `mean_reversion_label`
-- `volatility_label`
-- `carry_proxy_label`
-- `factor_exposure_labels`: Collection of descriptive factor tags
+- `window`: Calculation horizon such as `20d`, `60d`, or `252d`
+- `standardized_net_returns`
+- `benchmark_returns`
+- `factor_returns`
+- `turnover`
+- `leverage`
+- `holding_period`
+- `metadata_features`
+- `peer_normalized_features`
+- `style_exposures`: Measured exposures for equity beta, rates duration, curve, carry, credit, FX, commodity, and trend or momentum
 - `rolling_sharpe_value`
 - `skew_value`
 - `max_drawdown_value`
 - `turnover_proxy_value`
 - `peer_correlation_summary`
-- `availability_flags`: Metrics that were unavailable
-- `assumption_notes`: User-visible explanation text
+- `availability_flags`: Metrics or inputs that were unavailable
+- `feature_version`
 
 **Validation Rules**:
-- Every requested ETF must have one label set per analytics run
+- Every requested ETF must have one or more feature snapshots per analytics run
+- Feature windows must use declared calculation horizons only
 - Unavailable metrics must appear in `availability_flags`
-- Factor exposure labels must record which proxy basket supported the result
+- Style exposures must record the measured factor family that supported the estimate
+
+## Weak Label Vote
+
+**Purpose**: Stores one labeling-function output for one semantic label on one
+ETF snapshot before weak-label aggregation.
+
+**Fields**:
+- `analytics_run_id`
+- `ticker`
+- `label_name`
+- `labeling_function_name`
+- `window`
+- `vote`: Positive, negative, or abstain
+- `score`
+- `probability`
+- `evidence`
+- `source`
+- `version`
+
+**Validation Rules**:
+- Every vote must reference a declared semantic label in the ontology
+- Abstentions must be explicit rather than implied by missing rows
+- Evidence must reference the features or exposures that drove the vote
+
+## Label Record
+
+**Purpose**: Stores one probabilistic semantic or descriptor label for one ETF
+in one analytics run.
+
+**Fields**:
+- `analytics_run_id`
+- `ticker`
+- `name`: Namespaced label such as `descriptor.asset_class`, `descriptor.region`, `exposure.trend`, `exposure.carry`, `behavior.mean_reversion`, or `risk.high_volatility`
+- `probability`
+- `active`
+- `window`
+- `evidence`
+- `source`: Example: `weak_supervision+classifier_chain`
+- `confidence`: Low, medium, or high
+- `version`
+- `namespace`
+- `exclusive_group`: Present for descriptor namespaces that permit only one active label in the group
+
+**Validation Rules**:
+- Every requested ETF must have one or more label records per analytics run
+- `descriptor.asset_class` and `descriptor.region` must enforce exclusivity within their groups
+- Non-descriptor semantic labels are non-exclusive and must be stored as probabilities, not single strings
+- `active` must be derived from calibrated probability thresholds, not hard-coded bucket names
+- Evidence and source provenance must be present for every persisted label
+
+## Latent Family Membership
+
+**Purpose**: Stores sidecar unsupervised cluster memberships for discovery and
+search without replacing the semantic label taxonomy.
+
+**Fields**:
+- `analytics_run_id`
+- `ticker`
+- `family_id`
+- `probability`
+- `model_type`: Example: GMM or HDBSCAN
+- `embedding_version`
+- `source`
+
+**Validation Rules**:
+- Latent family memberships must be soft probabilities rather than a single forced cluster ID when the model supports it
+- Latent family records must remain separate from semantic label records
+- Cluster identifiers must not be used as substitutes for semantic labels
+
+## Model Evaluation Summary
+
+**Purpose**: Stores evaluation, calibration, and stability metrics for one
+labeling model bundle so production readiness can be assessed.
+
+**Fields**:
+- `analytics_run_id`
+- `model_version`
+- `per_label_precision`
+- `per_label_recall`
+- `average_precision`
+- `sample_level_jaccard`
+- `label_ranking_average_precision`
+- `calibration_summary`
+- `rolling_window_stability`
+- `notes`
+
+**Validation Rules**:
+- Evaluation output must include both per-label and aggregate multilabel metrics
+- Calibration quality must be tracked alongside ranking and overlap metrics
+- Stability checks must surface labels that flip excessively across rolling windows
 
 ## Regime Scenario
 
